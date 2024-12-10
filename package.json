@@ -26,7 +26,8 @@
     "unfetch": "^4.2.0",
     "@babel/plugin-proposal-optional-chaining": "^7.x.x",
     "node-fetch-native": "^1.4.0",
-    "vue-typed-js": "^0.1.2"
+    "vue-typed-js": "^0.1.2",
+    "@nuxtjs/vercel-builder": "^0.24.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.8",
