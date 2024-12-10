@@ -1,32 +1,40 @@
 <template>
-  <div class="animation-container" v-if="params">
-    <div class="chat-container">
-      <div class="chat-header">
-        <div class="model-info">
-          <span class="model-name">{{ getAIName }}</span>
-          <span class="mood-badge">{{ getMoodName }}</span>
+  <div>
+    <!-- Top ad -->
+    <GoogleAd ad-slot="YOUR-AD-SLOT-4" position="center" />
+
+    <div class="animation-container" v-if="params">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="model-info">
+            <span class="model-name">{{ getAIName }}</span>
+            <span class="mood-badge">{{ getMoodName }}</span>
+          </div>
+        </div>
+
+        <div class="chat-messages" ref="messagesContainer">
+          <ChatMessage
+            v-if="showUserMessage"
+            :text="params.text"
+            :timestamp="userMessageTime"
+            @typingComplete="onUserMessageComplete"
+            :language="params.lang"
+          />
+          <ChatMessage
+            v-if="showAIResponse"
+            :text="getAIResponse"
+            :isAI="true"
+            :aiName="getAIName"
+            :timestamp="aiMessageTime"
+            @typingComplete="onAIMessageComplete"
+            :language="params.lang"
+          />
         </div>
       </div>
-
-      <div class="chat-messages" ref="messagesContainer">
-        <ChatMessage
-          v-if="showUserMessage"
-          :text="params.text"
-          :timestamp="userMessageTime"
-          @typingComplete="onUserMessageComplete"
-          :language="params.lang"
-        />
-        <ChatMessage
-          v-if="showAIResponse"
-          :text="getAIResponse"
-          :isAI="true"
-          :aiName="getAIName"
-          :timestamp="aiMessageTime"
-          @typingComplete="onAIMessageComplete"
-          :language="params.lang"
-        />
-      </div>
     </div>
+
+    <!-- Bottom ad -->
+    <GoogleAd ad-slot="YOUR-AD-SLOT-5" position="center" />
   </div>
   <div v-else class="error-container">
     <h2>{{ translations[currentLang].error.invalid }}</h2>
@@ -43,11 +51,13 @@ import { getAIServiceUrl } from "~/utils/aiServices";
 import { getRandomResponse } from "~/utils/moodResponses";
 import translations from "~/utils/translations";
 import ChatMessage from "~/components/ChatMessage.vue";
+import GoogleAd from "~/components/GoogleAd.vue";
 
 export default {
   name: "AnimationPage",
   components: {
     ChatMessage,
+    GoogleAd,
   },
   data() {
     return {
@@ -110,8 +120,8 @@ export default {
 <style scoped>
 .animation-container {
   width: 50%;
-  margin: 0 auto;
-  height: calc(100vh - 160px);
+  margin: 1rem auto;
+  height: calc(100vh - 260px);
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
