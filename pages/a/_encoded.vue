@@ -6,6 +6,13 @@
           <span class="model-name">{{ getAIName }}</span>
           <span class="mood-badge">{{ getMoodName }}</span>
         </div>
+        <button
+          class="export-button"
+          @click="exportChat"
+          title="Export conversation"
+        >
+          <font-awesome-icon :icon="['fas', 'download']" />
+        </button>
       </div>
 
       <div class="chat-messages" ref="messagesContainer">
@@ -148,6 +155,24 @@ export default {
         }, 1500);
       }, 500);
     },
+    exportChat() {
+      const content = [
+        `Question: ${this.params.text}`,
+        `AI Model: ${this.getAIName}`,
+        `Mood: ${this.getMoodName}`,
+        `Response: ${this.getAIResponse}`,
+        `Redirect Message: ${this.getRedirectMessage}`,
+        `\nGenerated with Let Me GPT That For You\n${window.location.href}`,
+      ].join("\n\n");
+
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "conversation.txt";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
   },
 };
 </script>
@@ -178,6 +203,9 @@ export default {
   padding: 1.25rem;
   background-color: #2563eb;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .model-info {
@@ -289,5 +317,25 @@ export default {
   to {
     transform: rotate(360deg);
   }
+}
+
+.export-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.export-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 </style>
