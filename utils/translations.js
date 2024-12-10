@@ -7,6 +7,8 @@ export default {
       mood: 'AI Mood',
       language: 'Language',
       generateButton: 'Generate Link',
+      generateAndCopyButton: 'Generate & Copy',
+      copied: 'Copied!',
       shareableLink: 'Your shareable link:',
       copy: 'Copy'
     },
@@ -37,6 +39,8 @@ export default {
       mood: 'Modo de IA',
       language: 'Idioma',
       generateButton: 'Generar Enlace',
+      generateAndCopyButton: 'Generar y Copiar',
+      copied: '¡Copiado!',
       shareableLink: 'Tu enlace para compartir:',
       copy: 'Copiar'
     },
@@ -67,6 +71,8 @@ export default {
       mood: 'Humeur IA',
       language: 'Langue',
       generateButton: 'Générer le Lien',
+      generateAndCopyButton: 'Générer et Copier',
+      copied: 'Copié !',
       shareableLink: 'Votre lien partageable:',
       copy: 'Copier'
     },
@@ -97,6 +103,8 @@ export default {
       mood: 'KI-Stimmung',
       language: 'Sprache',
       generateButton: 'Link Generieren',
+      generateAndCopyButton: 'Generieren & Kopieren',
+      copied: 'Kopiert!',
       shareableLink: 'Ihr teilbarer Link:',
       copy: 'Kopieren'
     },

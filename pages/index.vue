@@ -55,10 +55,10 @@
 
     <button
       class="generate-button"
-      @click="generateUrl"
+      @click="generateAndCopy"
       :disabled="!searchText.trim()"
     >
-      {{ translations[selectedLanguage].input.generateButton }}
+      {{ buttonText }}
     </button>
 
     <div v-if="generatedUrl" class="result-section">
@@ -71,9 +71,6 @@
           ref="urlInput"
           class="form-input"
         />
-        <button class="copy-button" @click="copyUrl">
-          {{ translations[selectedLanguage].input.copy }}
-        </button>
       </div>
     </div>
   </div>
@@ -97,7 +94,20 @@ export default {
       aiModels,
       languages: supportedLanguages,
       translations,
+      justCopied: false,
+      copyTimeout: null,
     };
+  },
+  computed: {
+    buttonText() {
+      if (!this.generatedUrl) {
+        return this.translations[this.selectedLanguage].input
+          .generateAndCopyButton;
+      }
+      return this.justCopied
+        ? this.translations[this.selectedLanguage].input.copied
+        : this.translations[this.selectedLanguage].input.generateAndCopyButton;
+    },
   },
   mounted() {
     this.selectedLanguage = getDefaultLanguage();
@@ -105,6 +115,13 @@ export default {
   methods: {
     getModelDescription(modelId, language) {
       return getModelDescription(modelId, language);
+    },
+    generateAndCopy() {
+      this.generateUrl();
+      // Wait for next tick to ensure URL is generated
+      this.$nextTick(() => {
+        this.copyUrl();
+      });
     },
     generateUrl() {
       if (!this.searchText.trim()) return;
@@ -118,9 +135,29 @@ export default {
       this.generatedUrl = `${window.location.origin}/a/${encoded}`;
     },
     copyUrl() {
+      if (!this.generatedUrl) return;
+
       this.$refs.urlInput.select();
       document.execCommand("copy");
+
+      this.justCopied = true;
+
+      // Clear existing timeout if any
+      if (this.copyTimeout) {
+        clearTimeout(this.copyTimeout);
+      }
+
+      // Reset copied state after 2 seconds
+      this.copyTimeout = setTimeout(() => {
+        this.justCopied = false;
+      }, 2000);
     },
+  },
+  beforeDestroy() {
+    // Clean up timeout if component is destroyed
+    if (this.copyTimeout) {
+      clearTimeout(this.copyTimeout);
+    }
   },
 };
 </script>
@@ -194,6 +231,8 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .generate-button:hover:not(:disabled) {
@@ -204,6 +243,22 @@ export default {
 .generate-button:disabled {
   background-color: #64748b;
   cursor: not-allowed;
+}
+
+.generate-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.generate-button:active::after {
+  opacity: 0.1;
 }
 
 .result-section {
