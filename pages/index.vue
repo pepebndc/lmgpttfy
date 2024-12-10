@@ -1,38 +1,55 @@
 <template>
   <div class="generator-container">
+    <div class="form-group language-selector">
+      <label for="language">{{
+        translations[selectedLanguage].input.language
+      }}</label>
+      <select id="language" v-model="selectedLanguage" class="form-select">
+        <option v-for="lang in languages" :key="lang.id" :value="lang.id">
+          {{ lang.name }}
+        </option>
+      </select>
+    </div>
+
     <div class="form-group">
-      <label for="search-text">What would you ask?</label>
+      <label for="search-text">{{
+        translations[selectedLanguage].input.question
+      }}</label>
       <textarea
         id="search-text"
         v-model="searchText"
-        placeholder="Enter your question..."
+        :placeholder="translations[selectedLanguage].input.placeholder"
         class="form-input text-area"
         rows="4"
       ></textarea>
     </div>
 
     <div class="form-group">
-      <label for="ai-model">AI Model</label>
+      <label for="ai-model">{{
+        translations[selectedLanguage].input.model
+      }}</label>
       <select id="ai-model" v-model="selectedModel" class="form-select">
         <option v-for="model in aiModels" :key="model.id" :value="model.id">
           {{ model.name }}
         </option>
       </select>
-      <span class="model-description" v-if="selectedModelInfo">
-        {{ selectedModelInfo.description }}
+      <span class="model-description" v-if="selectedModel">
+        {{ getModelDescription(selectedModel, selectedLanguage) }}
       </span>
     </div>
 
     <div class="form-group">
-      <label for="ai-mood">AI Mood</label>
+      <label for="ai-mood">{{
+        translations[selectedLanguage].input.mood
+      }}</label>
       <select id="ai-mood" v-model="selectedMood" class="form-select">
-        <option value="professional">Professional</option>
-        <option value="friendly">Friendly</option>
-        <option value="sarcastic">Sarcastic</option>
-        <option value="pirate">Pirate</option>
-        <option value="medieval">Medieval</option>
-        <option value="zen">Zen</option>
-        <option value="roast">Roast Mode 🔥</option>
+        <option
+          v-for="(name, mood) in translations[selectedLanguage].moods"
+          :key="mood"
+          :value="mood"
+        >
+          {{ name }}
+        </option>
       </select>
     </div>
 
@@ -41,11 +58,11 @@
       @click="generateUrl"
       :disabled="!searchText.trim()"
     >
-      Generate Link
+      {{ translations[selectedLanguage].input.generateButton }}
     </button>
 
     <div v-if="generatedUrl" class="result-section">
-      <p>Your shareable link:</p>
+      <p>{{ translations[selectedLanguage].input.shareableLink }}</p>
       <div class="url-display">
         <input
           type="text"
@@ -54,7 +71,9 @@
           ref="urlInput"
           class="form-input"
         />
-        <button class="copy-button" @click="copyUrl">Copy</button>
+        <button class="copy-button" @click="copyUrl">
+          {{ translations[selectedLanguage].input.copy }}
+        </button>
       </div>
     </div>
   </div>
@@ -62,25 +81,31 @@
 
 <script>
 import { encodeParams } from "~/utils/urlParams";
-import { aiModels } from "~/utils/aiServices";
+import { aiModels, getModelDescription } from "~/utils/aiServices";
+import { supportedLanguages, getDefaultLanguage } from "~/utils/languages";
+import translations from "~/utils/translations";
 
 export default {
   name: "GeneratorPage",
   data() {
     return {
       searchText: "",
-      selectedModel: "perplexity", // Default to Perplexity
+      selectedModel: "perplexity",
       selectedMood: "professional",
+      selectedLanguage: "en",
       generatedUrl: "",
       aiModels,
+      languages: supportedLanguages,
+      translations,
     };
   },
-  computed: {
-    selectedModelInfo() {
-      return this.aiModels.find((model) => model.id === this.selectedModel);
-    },
+  mounted() {
+    this.selectedLanguage = getDefaultLanguage();
   },
   methods: {
+    getModelDescription(modelId, language) {
+      return getModelDescription(modelId, language);
+    },
     generateUrl() {
       if (!this.searchText.trim()) return;
 
@@ -88,13 +113,13 @@ export default {
         text: this.searchText,
         model: this.selectedModel,
         mood: this.selectedMood,
+        lang: this.selectedLanguage,
       });
       this.generatedUrl = `${window.location.origin}/a/${encoded}`;
     },
     copyUrl() {
       this.$refs.urlInput.select();
       document.execCommand("copy");
-      // TODO: Add a toast or notification to show it was copied
     },
   },
 };
@@ -104,11 +129,19 @@ export default {
 .generator-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 2rem;
-  height: calc(100vh - 160px);
+  padding: 2rem;
+  min-height: calc(100vh - 160px);
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+@media (max-height: 800px) {
+  .generator-container {
+    justify-content: flex-start;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
 }
 
 .form-group {
@@ -215,9 +248,8 @@ export default {
 
 @media (max-width: 640px) {
   .generator-container {
-    padding: 1.5rem;
-    height: auto;
-    padding-bottom: 2rem;
+    padding: 1rem;
+    min-height: auto;
   }
 
   .url-display {
@@ -228,5 +260,10 @@ export default {
     width: 100%;
     padding: 1rem;
   }
+}
+
+.language-selector {
+  margin-bottom: 2rem;
+  max-width: 200px;
 }
 </style>

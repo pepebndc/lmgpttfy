@@ -4,7 +4,7 @@
       <div class="chat-header">
         <div class="model-info">
           <span class="model-name">{{ getAIName }}</span>
-          <span class="mood-badge">{{ params.mood }} mode</span>
+          <span class="mood-badge">{{ getMoodName }}</span>
         </div>
       </div>
 
@@ -14,6 +14,7 @@
           :text="params.text"
           :timestamp="userMessageTime"
           @typingComplete="onUserMessageComplete"
+          :translations="translations[params.lang]"
         />
         <ChatMessage
           v-if="showAIResponse"
@@ -22,14 +23,17 @@
           :aiName="getAIName"
           :timestamp="aiMessageTime"
           @typingComplete="onAIMessageComplete"
+          :translations="translations[params.lang]"
         />
       </div>
     </div>
   </div>
   <div v-else class="error-container">
-    <h2>Invalid URL Parameters</h2>
-    <p>The provided URL appears to be invalid or corrupted.</p>
-    <nuxt-link to="/" class="home-link">Go to Homepage</nuxt-link>
+    <h2>{{ translations[currentLang].error.invalid }}</h2>
+    <p>{{ translations[currentLang].error.corrupted }}</p>
+    <nuxt-link to="/" class="home-link">
+      {{ translations[currentLang].error.goHome }}
+    </nuxt-link>
   </div>
 </template>
 
@@ -37,6 +41,7 @@
 import { decodeParams } from "~/utils/urlParams";
 import { getAIServiceUrl } from "~/utils/aiServices";
 import { getRandomResponse } from "~/utils/moodResponses";
+import translations from "~/utils/translations";
 import ChatMessage from "~/components/ChatMessage.vue";
 
 export default {
@@ -51,9 +56,13 @@ export default {
       showAIResponse: false,
       userMessageTime: new Date(),
       aiMessageTime: null,
+      translations,
     };
   },
   computed: {
+    currentLang() {
+      return this.params?.lang || "en";
+    },
     getAIName() {
       const modelNames = {
         perplexity: "Perplexity AI",
@@ -62,8 +71,14 @@ export default {
       };
       return modelNames[this.params?.model] || "AI Assistant";
     },
+    getMoodName() {
+      return (
+        this.translations[this.currentLang].moods[this.params?.mood] ||
+        this.translations.en.moods[this.params?.mood]
+      );
+    },
     getAIResponse() {
-      return getRandomResponse(this.params?.mood);
+      return getRandomResponse(this.params?.mood, this.currentLang);
     },
   },
   created() {
