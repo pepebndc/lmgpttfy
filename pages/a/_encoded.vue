@@ -25,14 +25,33 @@
           @typingComplete="onAIMessageComplete"
           :language="params.lang"
         />
+        <ChatMessage
+          v-if="showRedirectMessage"
+          :text="getRedirectMessage"
+          :isAI="true"
+          :aiName="getAIName"
+          :timestamp="redirectMessageTime"
+          @typingComplete="onRedirectMessageComplete"
+          :language="params.lang"
+        />
+        <div v-if="showLoader" class="loader"></div>
       </div>
     </div>
   </div>
   <div v-else class="error-container">
-    <h2>{{ translations[currentLang].error.invalid }}</h2>
-    <p>{{ translations[currentLang].error.corrupted }}</p>
+    <h2>
+      {{
+        translations[currentLang]?.error?.invalid || "Invalid URL Parameters"
+      }}
+    </h2>
+    <p>
+      {{
+        translations[currentLang]?.error?.corrupted ||
+        "The provided URL appears to be invalid or corrupted."
+      }}
+    </p>
     <nuxt-link to="/" class="home-link">
-      {{ translations[currentLang].error.goHome }}
+      {{ translations[currentLang]?.error?.goHome || "Go to Homepage" }}
     </nuxt-link>
   </div>
 </template>
@@ -41,7 +60,7 @@
 import { decodeParams } from "~/utils/urlParams";
 import { getAIServiceUrl } from "~/utils/aiServices";
 import { getRandomResponse } from "~/utils/moodResponses";
-import translations from "~/utils/translations";
+import globalTranslations from "~/utils/translations";
 import ChatMessage from "~/components/ChatMessage.vue";
 
 export default {
@@ -54,9 +73,12 @@ export default {
       params: null,
       showUserMessage: false,
       showAIResponse: false,
+      showRedirectMessage: false,
+      showLoader: false,
       userMessageTime: new Date(),
       aiMessageTime: null,
-      translations,
+      redirectMessageTime: null,
+      translations: globalTranslations,
     };
   },
   computed: {
@@ -73,12 +95,23 @@ export default {
     },
     getMoodName() {
       return (
-        this.translations[this.currentLang].moods[this.params?.mood] ||
-        this.translations.en.moods[this.params?.mood]
+        this.translations[this.currentLang]?.moods?.[this.params?.mood] ||
+        this.translations.en.moods[this.params?.mood] ||
+        this.params?.mood
       );
     },
     getAIResponse() {
-      return getRandomResponse(this.params?.mood, this.params?.lang);
+      return getRandomResponse(
+        this.params?.mood || "professional",
+        this.currentLang
+      );
+    },
+    getRedirectMessage() {
+      return (
+        this.translations[this.currentLang]?.redirect ||
+        this.translations.en.redirect ||
+        "Let me redirect you to someone who knows more about this..."
+      );
     },
   },
   created() {
@@ -99,9 +132,21 @@ export default {
     },
     onAIMessageComplete() {
       setTimeout(() => {
-        const serviceUrl = getAIServiceUrl(this.params.text, this.params.model);
-        window.location.href = serviceUrl;
-      }, 1500);
+        this.redirectMessageTime = new Date();
+        this.showRedirectMessage = true;
+      }, 1000);
+    },
+    onRedirectMessageComplete() {
+      setTimeout(() => {
+        this.showLoader = true;
+        setTimeout(() => {
+          const serviceUrl = getAIServiceUrl(
+            this.params.text,
+            this.params.model
+          );
+          window.location.href = serviceUrl;
+        }, 1500);
+      }, 500);
     },
   },
 };
@@ -221,6 +266,28 @@ export default {
     margin: 0;
     height: 100%;
     border-radius: 0;
+  }
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.loader:after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: loader-spin 1s linear infinite;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

@@ -30,7 +30,8 @@ export default {
       invalid: 'Invalid URL Parameters',
       corrupted: 'The provided URL appears to be invalid or corrupted.',
       goHome: 'Go to Homepage'
-    }
+    },
+    redirect: "Let me redirect you to someone who knows more about this..."
   },
   es: {
     input: {
@@ -63,7 +64,8 @@ export default {
       invalid: 'Parámetros de URL Inválidos',
       corrupted: 'La URL proporcionada parece ser inválida o estar corrupta.',
       goHome: 'Ir al Inicio'
-    }
+    },
+    redirect: "Déjame redirigirte a alguien que sabe más sobre esto..."
   },
   fr: {
     input: {
@@ -96,7 +98,8 @@ export default {
       invalid: 'Paramètres URL Invalides',
       corrupted: 'L\'URL fournie semble invalide ou corrompue.',
       goHome: 'Retour à l\'Accueil'
-    }
+    },
+    redirect: "Laissez-moi vous rediriger vers quelqu'un qui en sait plus..."
   },
   de: {
     input: {
@@ -129,7 +132,8 @@ export default {
       invalid: 'Ungültige URL-Parameter',
       corrupted: 'Die angegebene URL scheint ungültig oder beschädigt zu sein.',
       goHome: 'Zur Startseite'
-    }
+    },
+    redirect: "Ich leite Sie zu jemandem weiter, der mehr darüber weiß..."
   }
   // Add other languages...
 } 
