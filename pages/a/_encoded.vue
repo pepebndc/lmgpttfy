@@ -32,15 +32,6 @@
           @typingComplete="onAIMessageComplete"
           :language="params.lang"
         />
-        <ChatMessage
-          v-if="showRedirectMessage"
-          :text="getRedirectMessage"
-          :isAI="true"
-          :aiName="getAIName"
-          :timestamp="redirectMessageTime"
-          @typingComplete="onRedirectMessageComplete"
-          :language="params.lang"
-        />
         <div v-if="showLoader" class="loader"></div>
       </div>
     </div>
@@ -80,11 +71,9 @@ export default {
       params: null,
       showUserMessage: false,
       showAIResponse: false,
-      showRedirectMessage: false,
       showLoader: false,
       userMessageTime: new Date(),
       aiMessageTime: null,
-      redirectMessageTime: null,
       translations: globalTranslations,
     };
   },
@@ -113,13 +102,6 @@ export default {
         this.currentLang
       );
     },
-    getRedirectMessage() {
-      return (
-        this.translations[this.currentLang]?.redirect ||
-        this.translations.en.redirect ||
-        "Let me redirect you to someone who knows more about this..."
-      );
-    },
   },
   created() {
     const { encoded } = this.$route.params;
@@ -139,12 +121,6 @@ export default {
     },
     onAIMessageComplete() {
       setTimeout(() => {
-        this.redirectMessageTime = new Date();
-        this.showRedirectMessage = true;
-      }, 1000);
-    },
-    onRedirectMessageComplete() {
-      setTimeout(() => {
         this.showLoader = true;
         setTimeout(() => {
           const serviceUrl = getAIServiceUrl(
@@ -161,7 +137,6 @@ export default {
         `AI Model: ${this.getAIName}`,
         `Mood: ${this.getMoodName}`,
         `Response: ${this.getAIResponse}`,
-        `Redirect Message: ${this.getRedirectMessage}`,
         `\nGenerated with Let Me GPT That For You\n${window.location.href}`,
       ].join("\n\n");
 
