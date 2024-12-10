@@ -14,7 +14,7 @@
           :text="params.text"
           :timestamp="userMessageTime"
           @typingComplete="onUserMessageComplete"
-          :translations="translations[params.lang]"
+          :language="params.lang"
         />
         <ChatMessage
           v-if="showAIResponse"
@@ -23,7 +23,7 @@
           :aiName="getAIName"
           :timestamp="aiMessageTime"
           @typingComplete="onAIMessageComplete"
-          :translations="translations[params.lang]"
+          :language="params.lang"
         />
       </div>
     </div>
@@ -78,7 +78,7 @@ export default {
       );
     },
     getAIResponse() {
-      return getRandomResponse(this.params?.mood, this.currentLang);
+      return getRandomResponse(this.params?.mood, this.params?.lang);
     },
   },
   created() {
