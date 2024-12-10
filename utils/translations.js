@@ -10,7 +10,8 @@ export default {
       generateAndCopyButton: 'Generate & Copy',
       copied: 'Copied!',
       shareableLink: 'Your shareable link:',
-      copy: 'Copy'
+      copy: 'Copy',
+      share: 'Share via'
     },
     moods: {
       professional: 'Professional',
@@ -42,7 +43,8 @@ export default {
       generateAndCopyButton: 'Generar y Copiar',
       copied: '¡Copiado!',
       shareableLink: 'Tu enlace para compartir:',
-      copy: 'Copiar'
+      copy: 'Copiar',
+      share: 'Compartir vía'
     },
     moods: {
       professional: 'Profesional',
@@ -74,7 +76,8 @@ export default {
       generateAndCopyButton: 'Générer et Copier',
       copied: 'Copié !',
       shareableLink: 'Votre lien partageable:',
-      copy: 'Copier'
+      copy: 'Copier',
+      share: 'Partager via'
     },
     moods: {
       professional: 'Professionnel',
@@ -106,7 +109,8 @@ export default {
       generateAndCopyButton: 'Generieren & Kopieren',
       copied: 'Kopiert!',
       shareableLink: 'Ihr teilbarer Link:',
-      copy: 'Kopieren'
+      copy: 'Kopieren',
+      share: 'Teilen über'
     },
     moods: {
       professional: 'Professionell',

@@ -27,7 +27,11 @@
     "@babel/plugin-proposal-optional-chaining": "^7.x.x",
     "node-fetch-native": "^1.4.0",
     "vue-typed-js": "^0.1.2",
-    "@nuxtjs/vercel-builder": "^0.24.0"
+    "@nuxtjs/vercel-builder": "^0.24.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/vue-fontawesome": "^2.0.10"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.8",

@@ -46,6 +46,7 @@ export default {
   },
 
   plugins: [
-    { src: '~/plugins/vue-typed-js.js', mode: 'client' }
+    { src: '~/plugins/vue-typed-js.js', mode: 'client' },
+    { src: '~/plugins/fontawesome.js' }
   ]
 } 

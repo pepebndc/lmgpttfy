@@ -72,6 +72,11 @@
           class="form-input"
         />
       </div>
+      <ShareButtons
+        :url="generatedUrl"
+        :currentLanguage="selectedLanguage"
+        class="share-buttons-container"
+      />
     </div>
   </div>
 </template>
@@ -81,9 +86,13 @@ import { encodeParams } from "~/utils/urlParams";
 import { aiModels, getModelDescription } from "~/utils/aiServices";
 import { supportedLanguages, getDefaultLanguage } from "~/utils/languages";
 import translations from "~/utils/translations";
+import ShareButtons from "~/components/ShareButtons.vue";
 
 export default {
   name: "GeneratorPage",
+  components: {
+    ShareButtons,
+  },
   data() {
     return {
       searchText: "",
@@ -264,6 +273,7 @@ export default {
 .result-section {
   padding-top: 1.5rem;
   border-top: 2px solid #e2e8f0;
+  margin-top: 1rem;
 }
 
 .result-section p {
@@ -320,5 +330,9 @@ export default {
 .language-selector {
   margin-bottom: 2rem;
   max-width: 200px;
+}
+
+.share-buttons-container {
+  margin-top: 1rem;
 }
 </style>
