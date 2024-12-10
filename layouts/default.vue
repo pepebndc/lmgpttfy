@@ -1,8 +1,13 @@
 <template>
   <div class="app-container">
     <header class="app-header">
-      <div class="container header-content">
-        <h1 class="app-title">Let Me GPT That For You</h1>
+      <div class="container">
+        <div class="header-content">
+          <h1 class="app-title">Let Me GPT That For You</h1>
+          <div class="theme-toggle-wrapper">
+            <ThemeToggle />
+          </div>
+        </div>
       </div>
     </header>
     <main class="app-content">
@@ -17,8 +22,13 @@
 </template>
 
 <script>
+import ThemeToggle from "~/components/ThemeToggle.vue";
+
 export default {
   name: "DefaultLayout",
+  components: {
+    ThemeToggle,
+  },
 };
 </script>
 
@@ -30,17 +40,19 @@ export default {
 }
 
 .app-header {
-  background: linear-gradient(to right, #1e40af, #2563eb);
+  background: var(--headerGradient);
   color: white;
   padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow);
+  position: relative;
 }
 
 .header-content {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  padding: 0 3rem;
 }
 
 .app-title {
@@ -49,18 +61,26 @@ export default {
   font-weight: 600;
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.theme-toggle-wrapper {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .app-content {
   flex: 1;
   padding: 1rem 0;
-  background-color: #f8fafc;
+  background-color: var(--background);
   display: flex;
   flex-direction: column;
 }
 
 .app-footer {
-  background: linear-gradient(to right, #1e40af, #2563eb);
+  background: var(--headerGradient);
   padding: 0.75rem 0;
   margin-top: auto;
 }
@@ -69,5 +89,15 @@ export default {
   color: white;
   text-align: center;
   font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .app-title {
+    font-size: 1.25rem;
+  }
+
+  .header-content {
+    padding: 0 2.5rem;
+  }
 }
 </style>

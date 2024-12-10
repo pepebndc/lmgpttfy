@@ -35,11 +35,6 @@ export default {
           url: (text) => `https://twitter.com/intent/tweet?url=${text}`,
         },
         {
-          id: "facebook",
-          icon: ["fab", "facebook-f"],
-          url: (text) => `https://www.facebook.com/sharer/sharer.php?u=${text}`,
-        },
-        {
           id: "whatsapp",
           icon: ["fab", "whatsapp"],
           url: (text) => `https://wa.me/?text=${text}`,
@@ -54,7 +49,6 @@ export default {
         en: {
           share: {
             twitter: "Tweet",
-            facebook: "Share",
             whatsapp: "WhatsApp",
             telegram: "Telegram",
           },
@@ -62,7 +56,6 @@ export default {
         es: {
           share: {
             twitter: "Tuitear",
-            facebook: "Compartir",
             whatsapp: "WhatsApp",
             telegram: "Telegram",
           },
@@ -70,7 +63,6 @@ export default {
         fr: {
           share: {
             twitter: "Tweeter",
-            facebook: "Partager",
             whatsapp: "WhatsApp",
             telegram: "Telegram",
           },
@@ -78,7 +70,6 @@ export default {
         de: {
           share: {
             twitter: "Twittern",
-            facebook: "Teilen",
             whatsapp: "WhatsApp",
             telegram: "Telegram",
           },
@@ -114,6 +105,7 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   color: white;
+  background-color: var(--secondary);
 }
 
 .share-button svg {
@@ -122,10 +114,6 @@ export default {
 
 .twitter {
   background-color: #1da1f2;
-}
-
-.facebook {
-  background-color: #4267b2;
 }
 
 .whatsapp {

@@ -11,6 +11,7 @@
 - Created chat-like interface ✅
 - Added multi-language support ✅
 - Added social sharing functionality ✅
+- Added history functionality ✅
 
 ## User Stories
 
@@ -23,8 +24,7 @@
 - [x] Add copy-to-clipboard functionality
 - [x] Add social sharing buttons
 - [ ] Add preview of how the animation will look
-- [ ] Add QR code generation
-- [ ] Implement link history with localStorage
+- [x] Implement link history with localStorage
 - [ ] Add custom avatar selection
 - [ ] Add theme switcher (light/dark mode)
 
@@ -46,22 +46,18 @@
 - [x] Multi-language support
 - [x] Social Sharing
   - [x] Twitter integration
-  - [x] Facebook integration
   - [x] WhatsApp integration
   - [x] Telegram integration
 - [ ] Theme system
   - [ ] Light/dark mode toggle
   - [ ] Theme persistence in localStorage
   - [ ] System theme detection
-- [ ] QR Code Features
-  - [ ] Generate QR code for links
-  - [ ] Download QR code
-  - [ ] Custom QR styling
-- [ ] History System
-  - [ ] Save generated links
-  - [ ] View history
-  - [ ] Clear history
-  - [ ] Share from history
+- [x] History System
+  - [x] Save generated links
+  - [x] View history in table format
+  - [x] Copy links from history
+  - [x] Sort by date
+  - [x] Paginated results
 - [ ] Custom Avatars
   - [ ] Preset avatar collection
 - [ ] SEO optimization
@@ -76,10 +72,9 @@
 5. ~~Implement typing animation effect~~ ✅
 6. ~~Add redirect functionality to AI services~~ ✅
 7. ~~Add social sharing functionality~~ ✅
-8. Implement theme system
-9. Implement QR code generation
-10. Add link history system
-11. Implement custom avatars
+8. ~~Add history system~~ ✅
+9. Implement theme system
+10. Implement custom avatars
 
 ## Technical Considerations
 
@@ -89,6 +84,5 @@
 - Consider rate limiting for URL generation
 - Ensure proper theme transition animations
 - Handle avatar upload size and format restrictions
-- Implement efficient local storage management
-- Ensure QR code generation performance
+- Implement efficient local storage management ✅
 - Consider PWA capabilities for better offline support

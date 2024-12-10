@@ -103,24 +103,24 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e2e8f0;
+  background-color: var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow);
   flex-shrink: 0;
 }
 
 .message-content {
   flex: 1;
-  background-color: white;
-  color: #1e293b;
+  background-color: var(--surface);
+  color: var(--text);
   padding: 1rem;
   border-radius: 16px;
   max-width: 80%;
   border-top-left-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px var(--shadow);
 }
 
 .chat-message:not(.is-ai) {
@@ -128,7 +128,7 @@ export default {
 }
 
 .chat-message:not(.is-ai) .message-content {
-  background-color: #2563eb;
+  background-color: var(--primary);
   color: white;
   border-radius: 16px;
   border-top-right-radius: 4px;

@@ -1,83 +1,111 @@
 <template>
   <div class="generator-container">
-    <div class="form-group language-selector">
-      <label for="language">{{
-        translations[selectedLanguage].input.language
-      }}</label>
-      <select id="language" v-model="selectedLanguage" class="form-select">
-        <option v-for="lang in languages" :key="lang.id" :value="lang.id">
-          {{ lang.name }}
-        </option>
-      </select>
-    </div>
+    <div class="two-column-layout">
+      <!-- Settings Column -->
+      <div class="settings-column">
+        <div class="settings-group">
+          <div class="form-group">
+            <label for="language">{{
+              translations[selectedLanguage].input.language
+            }}</label>
+            <select
+              id="language"
+              v-model="selectedLanguage"
+              class="form-select"
+            >
+              <option v-for="lang in languages" :key="lang.id" :value="lang.id">
+                {{ lang.name }}
+              </option>
+            </select>
+          </div>
 
-    <div class="form-group">
-      <label for="search-text">{{
-        translations[selectedLanguage].input.question
-      }}</label>
-      <textarea
-        id="search-text"
-        v-model="searchText"
-        :placeholder="translations[selectedLanguage].input.placeholder"
-        class="form-input text-area"
-        rows="4"
-      ></textarea>
-    </div>
+          <div class="form-group">
+            <label for="ai-model">{{
+              translations[selectedLanguage].input.model
+            }}</label>
+            <select id="ai-model" v-model="selectedModel" class="form-select">
+              <option
+                v-for="model in aiModels"
+                :key="model.id"
+                :value="model.id"
+              >
+                {{ model.name }}
+              </option>
+            </select>
+            <span class="model-description" v-if="selectedModel">
+              {{ getModelDescription(selectedModel, selectedLanguage) }}
+            </span>
+          </div>
 
-    <div class="form-group">
-      <label for="ai-model">{{
-        translations[selectedLanguage].input.model
-      }}</label>
-      <select id="ai-model" v-model="selectedModel" class="form-select">
-        <option v-for="model in aiModels" :key="model.id" :value="model.id">
-          {{ model.name }}
-        </option>
-      </select>
-      <span class="model-description" v-if="selectedModel">
-        {{ getModelDescription(selectedModel, selectedLanguage) }}
-      </span>
-    </div>
-
-    <div class="form-group">
-      <label for="ai-mood">{{
-        translations[selectedLanguage].input.mood
-      }}</label>
-      <select id="ai-mood" v-model="selectedMood" class="form-select">
-        <option
-          v-for="(name, mood) in translations[selectedLanguage].moods"
-          :key="mood"
-          :value="mood"
-        >
-          {{ name }}
-        </option>
-      </select>
-    </div>
-
-    <button
-      class="generate-button"
-      @click="generateAndCopy"
-      :disabled="!searchText.trim()"
-    >
-      {{ buttonText }}
-    </button>
-
-    <div v-if="generatedUrl" class="result-section">
-      <p>{{ translations[selectedLanguage].input.shareableLink }}</p>
-      <div class="url-display">
-        <input
-          type="text"
-          readonly
-          :value="generatedUrl"
-          ref="urlInput"
-          class="form-input"
-        />
+          <div class="form-group">
+            <label for="ai-mood">{{
+              translations[selectedLanguage].input.mood
+            }}</label>
+            <select id="ai-mood" v-model="selectedMood" class="form-select">
+              <option
+                v-for="(name, mood) in translations[selectedLanguage].moods"
+                :key="mood"
+                :value="mood"
+              >
+                {{ name }}
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
-      <ShareButtons
-        :url="generatedUrl"
-        :currentLanguage="selectedLanguage"
-        class="share-buttons-container"
-      />
+
+      <!-- Vertical Divider -->
+      <div class="vertical-divider"></div>
+
+      <!-- Input Column -->
+      <div class="input-column">
+        <div class="input-content">
+          <div class="form-group main-input">
+            <label for="search-text">{{
+              translations[selectedLanguage].input.question
+            }}</label>
+            <textarea
+              id="search-text"
+              v-model="searchText"
+              :placeholder="translations[selectedLanguage].input.placeholder"
+              class="form-input text-area"
+              rows="4"
+            ></textarea>
+          </div>
+
+          <button
+            class="generate-button"
+            @click="generateAndCopy"
+            :disabled="!searchText.trim()"
+          >
+            {{ buttonText }}
+          </button>
+
+          <div class="result-section" :class="{ 'is-visible': generatedUrl }">
+            <p>{{ translations[selectedLanguage].input.shareableLink }}</p>
+            <div class="url-display">
+              <input
+                type="text"
+                readonly
+                :value="generatedUrl"
+                ref="urlInput"
+                class="form-input"
+              />
+            </div>
+            <ShareButtons
+              :url="generatedUrl"
+              :currentLanguage="selectedLanguage"
+              class="share-buttons-container"
+            />
+          </div>
+        </div>
+      </div>
     </div>
+    <History
+      v-if="showHistory"
+      :currentLanguage="selectedLanguage"
+      class="history-section"
+    />
   </div>
 </template>
 
@@ -87,11 +115,14 @@ import { aiModels, getModelDescription } from "~/utils/aiServices";
 import { supportedLanguages, getDefaultLanguage } from "~/utils/languages";
 import translations from "~/utils/translations";
 import ShareButtons from "~/components/ShareButtons.vue";
+import { saveToHistory } from "~/utils/history";
+import History from "~/components/History.vue";
 
 export default {
   name: "GeneratorPage",
   components: {
     ShareButtons,
+    History,
   },
   data() {
     return {
@@ -105,6 +136,7 @@ export default {
       translations,
       justCopied: false,
       copyTimeout: null,
+      showHistory: true,
     };
   },
   computed: {
@@ -142,6 +174,14 @@ export default {
         lang: this.selectedLanguage,
       });
       this.generatedUrl = `${window.location.origin}/a/${encoded}`;
+
+      // Save to history
+      saveToHistory({
+        text: this.searchText,
+        model: this.selectedModel,
+        mood: this.selectedMood,
+        url: this.generatedUrl,
+      });
     },
     copyUrl() {
       if (!this.generatedUrl) return;
@@ -173,21 +213,55 @@ export default {
 
 <style scoped>
 .generator-container {
-  max-width: 1000px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 2rem;
   min-height: calc(100vh - 160px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
-@media (max-height: 800px) {
-  .generator-container {
-    justify-content: flex-start;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
+.two-column-layout {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.settings-column {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 1rem;
+}
+
+.settings-group {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.vertical-divider {
+  width: 1px;
+  align-self: stretch;
+  background-color: #e5e7eb;
+  margin: 0 1rem;
+}
+
+.input-column {
+  flex: 1;
+  min-width: 0;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.input-content {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-input {
+  margin-bottom: 2rem;
 }
 
 .form-group {
@@ -198,7 +272,7 @@ export default {
   display: block;
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text);
   font-size: 1rem;
 }
 
@@ -206,17 +280,18 @@ export default {
 .form-select {
   width: 100%;
   padding: 1rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   border-radius: 12px;
   font-size: 1rem;
-  background: white;
-  color: #1e293b;
+  background: var(--surface);
+  color: var(--text);
   transition: all 0.2s ease;
 }
 
 .text-area {
   resize: vertical;
   min-height: 150px;
+  max-height: 400px;
   line-height: 1.5;
   font-size: 1.1rem;
 }
@@ -224,14 +299,14 @@ export default {
 .form-input:focus,
 .form-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--shadow);
 }
 
 .generate-button {
   width: 100%;
   padding: 1rem;
-  background-color: #2563eb;
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 12px;
@@ -245,12 +320,12 @@ export default {
 }
 
 .generate-button:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--primaryDark);
   transform: translateY(-1px);
 }
 
 .generate-button:disabled {
-  background-color: #64748b;
+  background-color: var(--secondary);
   cursor: not-allowed;
 }
 
@@ -271,13 +346,22 @@ export default {
 }
 
 .result-section {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.result-section.is-visible {
+  opacity: 1;
+  height: auto;
   padding-top: 1.5rem;
-  border-top: 2px solid #e2e8f0;
+  border-top: 2px solid var(--border);
   margin-top: 1rem;
 }
 
 .result-section p {
-  color: #64748b;
+  color: var(--textLight);
   margin-bottom: 0.75rem;
   font-weight: 500;
 }
@@ -307,32 +391,60 @@ export default {
 .model-description {
   display: block;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--textLight);
   margin-top: 0.5rem;
+}
+
+.share-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.share-buttons-container {
+  width: 100%;
+}
+
+@media (max-width: 1400px) {
+  .generator-container {
+    max-width: 1200px;
+  }
+
+  .input-column {
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .two-column-layout {
+    flex-direction: column;
+  }
+
+  .settings-column {
+    width: 100%;
+    position: static;
+  }
+
+  .vertical-divider {
+    display: none;
+  }
+
+  .input-column {
+    max-width: 100%;
+  }
+
+  .settings-group {
+    margin-bottom: 2rem;
+  }
 }
 
 @media (max-width: 640px) {
   .generator-container {
     padding: 1rem;
-    min-height: auto;
   }
 
-  .url-display {
-    flex-direction: column;
+  .input-content {
+    min-height: 300px;
   }
-
-  .copy-button {
-    width: 100%;
-    padding: 1rem;
-  }
-}
-
-.language-selector {
-  margin-bottom: 2rem;
-  max-width: 200px;
-}
-
-.share-buttons-container {
-  margin-top: 1rem;
 }
 </style>
