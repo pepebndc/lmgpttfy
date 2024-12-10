@@ -12,13 +12,6 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ],
-    script: [
-      { 
-        src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-CLIENT-ID',
-        async: true,
-        crossorigin: 'anonymous'
-      }
     ]
   },
 

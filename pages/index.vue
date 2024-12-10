@@ -1,8 +1,5 @@
 <template>
   <div class="generator-container">
-    <!-- Top ad -->
-    <GoogleAd ad-slot="YOUR-AD-SLOT-1" position="center" />
-
     <div class="two-column-layout">
       <!-- Settings Column -->
       <div class="settings-column">
@@ -104,18 +101,11 @@
         </div>
       </div>
     </div>
-
-    <!-- Ad before history -->
-    <GoogleAd ad-slot="YOUR-AD-SLOT-2" position="center" />
-
     <History
       v-if="showHistory"
       :currentLanguage="selectedLanguage"
       class="history-section"
     />
-
-    <!-- Bottom ad -->
-    <GoogleAd ad-slot="YOUR-AD-SLOT-3" position="center" />
   </div>
 </template>
 
@@ -127,14 +117,12 @@ import translations from "~/utils/translations";
 import ShareButtons from "~/components/ShareButtons.vue";
 import { saveToHistory } from "~/utils/history";
 import History from "~/components/History.vue";
-import GoogleAd from "~/components/GoogleAd.vue";
 
 export default {
   name: "GeneratorPage",
   components: {
     ShareButtons,
     History,
-    GoogleAd,
   },
   data() {
     return {
