@@ -1,18 +1,43 @@
 :root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --primary-light: #3b82f6;
+  /* Modern color palette */
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
   --secondary: #64748b;
   --accent: #0ea5e9;
+  
+  /* Futuristic gradients */
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --gradient-header: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  
+  /* Modern backgrounds */
   --background: #f8fafc;
-  --surface: #ffffff;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-dark: rgba(0, 0, 0, 0.03);
+  
+  /* Text colors */
   --text: #1e293b;
   --text-light: #64748b;
-  --border: #e2e8f0;
-  --shadow: rgba(0, 0, 0, 0.1);
+  --text-lighter: #94a3b8;
+  
+  /* Borders and shadows */
+  --border: rgba(148, 163, 184, 0.1);
+  --shadow: rgba(0, 0, 0, 0.05);
+  --shadow-strong: rgba(0, 0, 0, 0.08);
+  --glow: rgba(59, 130, 246, 0.1);
+  
+  /* Glass effect */
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  
+  /* Animation speeds */
+  --transition-fast: 0.2s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
 }
 
-/* Reset and base styles */
+/* Modern reset and base styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,21 +45,107 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--background);
   color: var(--text);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Form element global styles */
-input, select, button {
-  font-family: inherit;
-  transition: all 0.2s ease;
+/* Modern glass effect */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
 }
 
+/* Smooth transitions */
+input, select, button, a {
+  transition: all var(--transition-fast) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modern container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* Modern form elements */
+.form-input,
+.form-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  color: var(--text);
+  box-shadow: 0 2px 4px var(--shadow);
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--glow);
+  outline: none;
+}
+
+/* Modern buttons */
+.button {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px var(--shadow);
+  transform: translateY(0);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px var(--shadow-strong);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --container-padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .button {
+    padding: 0.875rem 1.75rem;
+  }
 } 
